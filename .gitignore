@@ -2,3 +2,6 @@ BDDA/
 *.mp4
 test/
 *.jpg
+yolov5/
+yolov7/
+*.pt

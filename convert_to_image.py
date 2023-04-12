@@ -26,7 +26,7 @@ for each_folder in entries:
             while(True):
                 ret, frame = videocap.read()
                 if ret:
-                    cv2.imwrite(gazemap_path+'/%d_pure_hm_%d.jpg'%(int(inner_files[:-4]),count),frame)
+                    cv2.imwrite(gazemap_path+'/%d_pure_hm_%d.jpg'%(int(inner_files[:-12]),count),frame)
                     count +=1
                 else:
                     break

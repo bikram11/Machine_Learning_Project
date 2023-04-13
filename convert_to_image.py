@@ -23,7 +23,7 @@ for each_folder in entries:
             videocap = cv2.VideoCapture(basepath+"/"+each_folder+"/"+inner_files)
             
             count = 0
-            while(True):
+            while(True and count<10):
                 ret, frame = videocap.read()
                 if ret:
                     cv2.imwrite(gazemap_path+'/%d_pure_hm_%d.jpg'%(int(inner_files[:-12]),count),frame)
@@ -40,7 +40,7 @@ for each_folder in entries:
             videocap = cv2.VideoCapture(basepath+"/"+each_folder+"/"+inner_files)
             
             count = 0
-            while(True):
+            while(True and count<10):
                 ret, frame = videocap.read()
                 if ret:
                     cv2.imwrite(camera_image_path+'/%d_%d.jpg'%(int(inner_files[:-4]),count),frame)

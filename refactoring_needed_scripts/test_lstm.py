@@ -1,0 +1,2 @@
+from subprocess import call
+call(["python","refactoring_needed_scripts/gaze_prediction_and_evaluation.py", "--data", "features_checked", "-b",  '64', '--no_train', '--lr', '0.01', '--epochs', '40', '--gridheight', '16', '--valgrid', 'val_grid.txt', '--testgrid', 'test_grid.txt', '--traingrid', 'train_grid.txt', '--gazemaps', 'raw_data/test/gazemap_images', '--yolo5bb', 'boundingboxlabels', '--visualizations', 'resuts/grid1616', '--threshhold', '0.5', '--best', 'refactoring_needed_scripts/grid1616_lstm_model_best.pth.tar','--convlstm' ])

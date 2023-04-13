@@ -6,3 +6,10 @@ yolov5/
 yolov7/
 *.pt
 MachineLearningProject/
+grids/
+features/
+features_checked/
+raw_data/
+runs/
+boundingboxlabels/
+resuts/sequential

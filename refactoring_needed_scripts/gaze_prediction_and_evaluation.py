@@ -110,8 +110,8 @@ def main():
         traindir = os.path.join(args.data, 'training')
         valdir = os.path.join(args.data, 'validation')
 
-        train_dataset = BDDA("training", args.traingrid, traindir, th, args.gazemaps,  (args.lstm or args.convlstm), args.sequence)
-        val_dataset = BDDA("validation", args.valgrid, valdir, th, args.gazemaps,  (args.lstm or args.convlstm), args.sequence)
+        train_dataset = BDDA("training", args.traingrid, traindir, th, args.gazemaps, args.sequence)
+        val_dataset = BDDA("validation", args.valgrid, valdir, th, args.gazemaps, args.sequence)
 
         train_loader = torch.utils.data.DataLoader(
             train_dataset, batch_size=args.batch_size, shuffle= True,
@@ -124,7 +124,7 @@ def main():
 
 
     testdir = os.path.join(args.data,'test')
-    test_dataset = BDDA("test", args.testgrid, testdir, th, args.gazemaps, (args.lstm or args.convlstm), args.sequence)
+    test_dataset = BDDA("test", args.testgrid, testdir, th, args.gazemaps,  args.sequence)
     test_loader = torch.utils.data.DataLoader(
         test_dataset,
         batch_size=args.batch_size, shuffle=False,

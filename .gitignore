@@ -11,5 +11,7 @@ features/
 features_checked/
 raw_data/
 runs/
+results/
+resuts/
 boundingboxlabels/
 resuts/sequential

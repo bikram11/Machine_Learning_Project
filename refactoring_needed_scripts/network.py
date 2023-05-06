@@ -142,7 +142,7 @@ class ConvLSTM(nn.Module):
 
         return outputs, (x, new_c)
 
-class ConvLSTMNet(nn.Module):
+class ImprovedConvLSTM(nn.Module):
     def __init__(self, gridheight, gridwidth, seqlen):
         super().__init__()
         self.conv1 = nn.Conv2d(512, 128, (1, 1), stride=(1, 1))
@@ -163,4 +163,48 @@ class ConvLSTMNet(nn.Module):
         x = output_convlstm[0]
         x = x.view(batch_size, timesteps, -1)
         x = self.fc3(x[:, -1, :])
+        return x
+
+
+class ConvLSTMNet(nn.Module):
+    def __init__(self, gridheight, gridwidth, seqlen, num_layers=4, dropout=0.2):
+        super().__init__()
+        self.conv1 = nn.Conv2d(2048, 128, (1, 1), stride=(1, 1))
+        self.pool = nn.AdaptiveAvgPool2d((6,10))
+        self.convlstm = ConvLSTM(input_channels=128, hidden_channels=[16]*num_layers, kernel_size=3, 
+                                 step=seqlen, effective_step=[seqlen-1])
+        self.attention = nn.Sequential(
+            nn.Linear(960, 64),
+            nn.Tanh(),
+            nn.Linear(64, 1),
+            nn.Softmax(dim=1)
+        )
+        self.fc = nn.Sequential(
+            nn.Linear(960, 512),
+            nn.ReLU(),
+            nn.Dropout(p=dropout),
+            nn.Linear(512, gridheight*gridwidth)
+        )
+
+    def forward(self, x):
+        x = torch.squeeze(x)
+        x = x.float()
+        batch_size, timesteps, C, H, W = x.size()
+        c_in = x.view(batch_size * timesteps, C, H, W)
+        c_out = self.conv1(c_in)
+        c_out = self.pool(c_out)
+        output_convlstm, _ = self.convlstm(c_out)
+        x = output_convlstm[0]
+        x = x.view(batch_size, timesteps, -1)
+
+        # Compute attention weights
+        attn_weights = self.attention(x.reshape(-1, x.size(-1)))
+        attn_weights = attn_weights.reshape(batch_size, timesteps, -1)
+
+        # Apply attention weights to the output of convlstm
+        x = (attn_weights * x).sum(dim=1)
+
+        # Pass the attended output through a fully connected network
+        x = self.fc(x)
+
         return x
